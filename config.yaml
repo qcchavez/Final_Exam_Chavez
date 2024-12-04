@@ -1,0 +1,21 @@
+---
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: update repository index (CentOS)
+    dnf:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "CentOS"
+
+#  - name: updating repository index (Ubuntu)
+#    apt:
+#      update_cache: yes
+#    ignore_errors: yes
+#    changed_when: false
+#    when: ansible_distribution == "Ubuntu"
+
+  roles:
+    - Ubuntu
+    - CentOS

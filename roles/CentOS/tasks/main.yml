@@ -1,0 +1,86 @@
+---
+
+## INSTALLATION OF NAGIOS MONITORING TOOL ##
+
+- name: Installing EPEL repository
+  yum:
+    name: epel-release
+    state: latest
+  when: ansible_distribution == "CentOS"
+
+- name: Installing required packages for Nagios
+  yum:
+    name: nagios
+    state: latest
+  when: ansible_distribution == "CentOS"
+
+- name: Enabling Nagios service
+  service:
+    name: nagios
+    state: restarted
+    enabled: true
+  when: ansible_distribution == "CentOS"
+
+- name: Installing Nagios Dependencies
+  yum:
+    name:
+      - gd-devel
+      - libpng-devel
+      - freetype-devel
+      - glibc
+      - gcc
+    state: latest
+  when: ansible_distribution == "CentOS"
+  
+## INSTALLATION OF APACHE ENTERPRISE SERVICE ##
+
+- name: Install Apache
+  yum:
+    name: httpd
+    state: present
+  when: ansible_distribution == "CentOS"
+
+- name: Starting Apache
+  service:
+    name: httpd
+    state: restarted
+    enabled: yes
+  when: ansible_distribution == "CentOS"
+
+
+- name: Create a custom index.html for Apache
+  copy:
+    content: "Welcome to Apache managed by Clarence B. Chavez using Ansible"
+    dest: "/var/www/html/index.html"
+  when: ansible_distribution == "CentOS"
+
+
+- name: Open firewall for HTTP
+  firewalld:
+    service: http
+    permanent: true
+    state: enabled
+  when: ansible_distribution == "CentOS"
+
+- name: Install Netdata
+  yum:
+    name: netdata
+    state: present
+  when: ansible_distribution == "CentOS"
+
+
+- name: Starting Netdata
+  service:
+    name: netdata
+    state: started
+    enabled: yes
+  when: ansible_distribution == "CentOS"
+  
+## CHANGING MOTD ##
+
+- name: Change MOTD
+  copy:
+   content: "Ansible Managed by {{ ansible_user }}"
+   dest: "/etc/motd"
+   mode: '0644'
+  when: ansible_distribution == "CentOS"

@@ -1,0 +1,8 @@
+[Ubuntu]
+#Can add more than one
+192.168.56.116
+
+[CentOS]
+#Can add more than one
+192.168.56.119 ansible_user=cchavez
+

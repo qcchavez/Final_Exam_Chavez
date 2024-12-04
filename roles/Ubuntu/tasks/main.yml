@@ -1,0 +1,78 @@
+---
+
+## INSTALLATION OF NAGIOS MONITORING TOOL ##
+
+- name: Install required packages
+  apt:
+    name: nagios4-core
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+
+- name: Enable Nagios service
+  service:
+    name: nagios4
+    state: restarted
+    enabled: true
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install Nagios Dependencies
+  apt:
+    name:
+      - libgd-dev
+      - libpng-dev
+      - libfreetype6-dev
+      - gcc
+      - libc6-dev
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+
+
+## INSTALLATION OF APACHE ENTERPRISE SERVICE ##
+
+- name: Installing Apache
+  package:
+    name: apache2
+    state: present
+  when: ansible_distribution == "Ubuntu"
+
+
+- name: Create a custom index.html for Apache
+  copy:
+    content: "Welcome to Apache managed by Clarence B. Chavez using Ansible!"
+    dest: "/var/www/html/index.html"
+  when: ansible_distribution == "Ubuntu"
+
+- name: Open firewall for HTTP
+  ufw:
+    rule: allow
+    name: 'Apache'
+  when: ansible_distribution == "Ubuntu"
+
+- name: Starting Apache
+  service:
+    name: apache2
+    state: restarted
+    enabled: true
+  when: ansible_distribution == "Ubuntu"
+  
+#- name: Install Netdata on Debian or Ubuntu
+#  apt:
+#    name: netdata
+#    state: present
+#  when: ansible_distribution == "Ubuntu"
+
+#- name: Ensure Netdata is running
+#  service:
+#    name: netdata
+#    state: restarted
+#    enabled: yes
+#  when: ansible_distribution == "Ubuntu"
+
+## CHANGING MOTD ##
+
+- name: Change MOTD
+  copy:
+   content: "Ansible Managed by {{ ansible_user }}"
+   dest: "/etc/motd"
+   mode: '0644'
+  when: ansible_distribution == "Ubuntu"
