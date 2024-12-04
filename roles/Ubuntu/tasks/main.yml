@@ -54,19 +54,19 @@
     state: restarted
     enabled: true
   when: ansible_distribution == "Ubuntu"
-  
-#- name: Install Netdata on Debian or Ubuntu
-#  apt:
-#    name: netdata
-#    state: present
-#  when: ansible_distribution == "Ubuntu"
 
-#- name: Ensure Netdata is running
-#  service:
-#    name: netdata
-#    state: restarted
-#    enabled: yes
-#  when: ansible_distribution == "Ubuntu"
+- name: Install Netdata
+  apt:
+    name: netdata
+    state: present
+  when: ansible_distribution == "Ubuntu"
+
+- name: Starting Netdata
+  service:
+    name: netdata
+    state: restarted
+    enabled: yes
+  when: ansible_distribution == "Ubuntu"
 
 ## CHANGING MOTD ##
 
